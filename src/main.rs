@@ -102,7 +102,7 @@ impl Geometrical for Sphere {
     fn intersect_ray(&self, ray: Ray) -> Option<Rgba<u8>> {
         // Vector from ray origin to sphere center
         let l = self.position - ray.origin;
-        let foo = ray.direction;
+        let foo = ray.origin + ray.direction;
         // Define whether sphere is visible or not
         let dot = l.dot(&foo);
         if dot <= 0.0 {
@@ -110,9 +110,18 @@ impl Geometrical for Sphere {
             return None;
         }
         // Sphere is in a FOV, so computing projection on a Ray
+
         // Finding a distance between sphere center and Ray
-        let proj = l * (dot / l.magnitude().powf(2.0));
+        // https://gamedev.ru/tip/?id=42
+
+        // let proj = l * (dot / l.magnitude().powf(2.0));
+        // let distance = (proj - self.position).magnitude();
+        
+        //This is a simplest, but more computational-heavy solution
+        let norm_l = l.normalized();
+        let proj = norm_l * norm_l.dot(&foo);
         let distance = (proj - self.position).magnitude();
+
         // If distance is less than radius, Ray is intersecting Sphere
         if distance <= self.radius {
             Some(self.color)
@@ -192,8 +201,8 @@ fn main() {
 fn render(width: u32, height: u32) -> image::DynamicImage {
     let mut img = image::DynamicImage::new_rgb8(width, height);
 
-    let sphere = Sphere::new(Vec3f::new(256.0, 256.0, 155.0), 50.0, Rgba { data: [255, 0, 0, 0] });
-    let bg_color = Rgba { data: [0, 255, 0, 0] };
+    let sphere = Sphere::new(Vec3f::new(256.0, 256.0, 256.0), 512.0, Rgba { data: [255, 0, 0, 255] });
+    let bg_color = Rgba { data: [255, 255, 255, 255] };
 
     for x in 0..width {
         for y in 0..height {
