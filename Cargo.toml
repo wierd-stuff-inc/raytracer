@@ -1,0 +1,9 @@
+[package]
+name = "raytracer"
+version = "0.1.0"
+authors = ["Kolaer <overlordin777@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+image = "0.21" # https://docs.rs/image/0.21.0/image/
+rayon = "1.0" # https://docs.rs/rayon/1.0.3/rayon/
