@@ -9,7 +9,7 @@ pub trait Geometrical: std::fmt::Debug {
     fn intersect_ray(&self, ray: Ray) -> Option<Rgba<u8>>;
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Sphere {
     position: Vec3f,
     radius: f32,
@@ -18,6 +18,7 @@ pub struct Sphere {
 
 impl Sphere {
     pub fn new(n_position: Vec3f, n_radius: f32, n_color: Rgba<u8>) -> Sphere {
+        assert!(n_radius >= 0.0);
         Sphere {
             position: n_position,
             radius: n_radius,

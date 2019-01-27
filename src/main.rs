@@ -35,10 +35,10 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
 
     for x in 0..width {
         for y in 0..height {
-            let ray = Ray {
-                origin: Vec3f::new(x as f32, y as f32, 0.0),
-                direction: Vec3f::new(0.0, 0.0, 1.0),
-            };
+            let ray = Ray::new(
+                Vec3f::new(x as f32, y as f32, 0.0),
+                Vec3f::new(0.0, 0.0, 1.0),
+            );
             if let Some(color) = sphere.intersect_ray(ray) {
                 img.put_pixel(x, y, color);
             } else {

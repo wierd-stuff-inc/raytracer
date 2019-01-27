@@ -1,8 +1,5 @@
 use std::ops::{Add, Mul, Sub};
 
-// VECTORS
-//_____________________________________________________________________
-
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Vec3f {
     x: f32,
@@ -20,17 +17,23 @@ impl Vec3f {
     }
 
     pub fn magnitude(&self) -> f32 {
-        self.dot(&*self).sqrt()
+        let res = self.dot(&*self).sqrt();
+        assert!(res + 1e-15 >= 0.0);
+        res
     }
 
     pub fn squared_magnitude(&self) -> f32 {
-        self.dot(&*self)
+        let res = self.dot(&*self);
+        assert!(res + 1e-15 >= 0.0);
+        res
     }
 
     pub fn normalized(&self) -> Vec3f {
         let length = self.magnitude();
 
-        Vec3f::new(self.x / length, self.y / length, self.z / length)
+        let res = Vec3f::new(self.x / length, self.y / length, self.z / length);
+        assert!((res.magnitude() - 1.0).abs() <= 1e-15);
+        res
     }
 
     pub fn dot(&self, other: &Vec3f) -> f32 {

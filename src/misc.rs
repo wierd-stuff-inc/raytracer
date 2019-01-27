@@ -1,7 +1,7 @@
 use crate::geometrical::*;
 use crate::vectors::*;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub struct Camera {
     position: Vec3f,
     fov_w: u32,
@@ -10,7 +10,7 @@ pub struct Camera {
     far_clipping_plane: f32,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct Ray {
     pub origin: Vec3f,
     pub direction: Vec3f,
@@ -18,6 +18,7 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: Vec3f, direction: Vec3f) -> Ray {
+        assert_ne!(origin, direction);
         Ray { origin, direction }
     }
 }
