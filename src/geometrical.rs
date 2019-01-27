@@ -42,13 +42,13 @@ impl Geometrical for Sphere {
         // Finding a distance between sphere center and Ray
         // https://gamedev.ru/tip/?id=42
 
-        // let proj = l * (dot / l.magnitude().powf(2.0));
-        // let distance = (proj - self.position).magnitude();
+        let proj = l * (dot / l.squared_magnitude());
+        let distance = (proj - self.position).magnitude();
 
         //This is a simplest, but more computational-heavy solution
-        let norm_l = l.normalized();
-        let proj = norm_l * norm_l.dot(&foo);
-        let distance = (proj - self.position).magnitude();
+        // let norm_l = l.normalized();
+        // let proj = norm_l * norm_l.dot(&foo);
+        // let distance = (proj - self.position).magnitude();
 
         // If distance is less than radius, Ray is intersecting Sphere
         if distance <= self.radius {

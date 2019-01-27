@@ -23,6 +23,10 @@ impl Vec3f {
         self.dot(&*self).sqrt()
     }
 
+    pub fn squared_magnitude(&self) -> f32 {
+        self.dot(&*self)
+    }
+
     pub fn normalized(&self) -> Vec3f {
         let length = self.magnitude();
 
