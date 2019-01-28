@@ -62,9 +62,8 @@ impl Vec3f {
 
     pub fn normalized(&self) -> Vec3f {
         let length = self.magnitude();
-
         let res = Vec3f::new(self.x / length, self.y / length, self.z / length);
-        assert!((res.magnitude() - 1.0).abs() <= 1e-15);
+        // assert!((res.magnitude() - 1.0).abs() <= 1e-15);
         res
     }
 

@@ -1,6 +1,6 @@
 extern crate image;
 
-use image::{GenericImage, Rgba};
+use image::Rgba;
 
 mod vectors;
 use vectors::*;
@@ -20,34 +20,39 @@ fn main() {
 }
 
 fn render(width: u32, height: u32) -> image::DynamicImage {
-    let mut img = image::DynamicImage::new_rgb8(width, height);
 
     let sphere = Sphere::new(
         Vec3f::new(256.0, 256.0, 256.0),
-        256.0,
+        100.0,
         Rgba {
             data: [255, 0, 0, 255],
+        },
+    );
+    let sphere2 = Sphere::new(
+        Vec3f::new(200.0, 128.0, 56.0),
+        56.0,
+        Rgba {
+            data: [220, 0, 127, 255],
+        },
+    );
+    let sphere3 = Sphere::new(
+        Vec3f::new(150.0, 50.0, 30.0),
+        40.0,
+        Rgba {
+            data: [100, 200, 50, 255],
         },
     );
     let bg_color = Rgba {
         data: [255, 255, 255, 255],
     };
 
-    for x in 0..width {
-        for y in 0..height {
-            let ray = Ray::new(
-                Vec3f::new(x as f32, y as f32, 0.0),
-                Vec3f::unit_forward(),
-            );
-            if let Some(hit) = sphere.intersect_ray(ray) {
-                img.put_pixel(x, y, hit.albedo);
-            } else {
-                img.put_pixel(x, y, bg_color);
-            }
-        }
-    }
+    let camera = Camera::new(Vec3f::zero(), width, height, 0.0, 0.0);
+    let mut scene = Scene::new(camera, bg_color);
+    scene.add_object(&sphere);
+    scene.add_object(&sphere2);
+    scene.add_object(&sphere3);
 
-    img
+    scene.render()
 }
 
 fn save(img: image::DynamicImage, output_path: String) {
