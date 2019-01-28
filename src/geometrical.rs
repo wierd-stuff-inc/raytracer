@@ -1,12 +1,13 @@
 extern crate image;
 
+use crate::misc::RaycastHit;
 use image::Rgba;
 
 use crate::misc::Ray;
 use crate::vectors::*;
 
 pub trait Geometrical: std::fmt::Debug {
-    fn intersect_ray(&self, ray: Ray) -> Option<Rgba<u8>>;
+    fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit>;
 }
 
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -28,32 +29,24 @@ impl Sphere {
 }
 
 impl Geometrical for Sphere {
-    fn intersect_ray(&self, ray: Ray) -> Option<Rgba<u8>> {
-        // Vector from ray origin to sphere center
+    fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit> {
+        // Vector to sphere center from ray origin.
         let l = self.position - ray.origin;
-        let foo = ray.origin + ray.direction;
-        // Define whether sphere is visible or not
-        let dot = l.dot(&foo);
-        if dot <= 0.0 {
-            // Sphere is behind the ray origin, so return None
-            return None;
-        }
-        // Sphere is in a FOV, so computing projection on a Ray
+        // ray length to the closest point to sphere center
+        let t = l.dot(&ray.direction);
+        // Point on a ray where t intersects it.
+        let p = ray.origin + ray.direction * t;
 
-        // Finding a distance between sphere center and Ray
-        // https://gamedev.ru/tip/?id=42
+        // Distance from sphere center to ray.
+        let y = (self.position - p).magnitude();
 
-        let proj = l * (dot / l.squared_magnitude());
-        let distance = (proj - self.position).magnitude();
-
-        //This is a simplest, but more computational-heavy solution
-        // let norm_l = l.normalized();
-        // let proj = norm_l * norm_l.dot(&foo);
-        // let distance = (proj - self.position).magnitude();
-
-        // If distance is less than radius, Ray is intersecting Sphere
-        if distance <= self.radius {
-            Some(self.color)
+        //If distance is less or equal than sphere radius -> ray intersects sphere.
+        if (y <= self.radius) {
+            let x = (self.radius * self.radius - y * y).sqrt();
+            let t_1 = p - Vec3f::from_one(x);
+            //let t_2 = t + x;
+            let normal = (t_1 - self.position).normalized();
+            Some(RaycastHit::new(t_1, normal, self.color))
         } else {
             None
         }

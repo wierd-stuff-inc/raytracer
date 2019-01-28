@@ -24,7 +24,7 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
 
     let sphere = Sphere::new(
         Vec3f::new(256.0, 256.0, 256.0),
-        512.0,
+        256.0,
         Rgba {
             data: [255, 0, 0, 255],
         },
@@ -37,10 +37,10 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
         for y in 0..height {
             let ray = Ray::new(
                 Vec3f::new(x as f32, y as f32, 0.0),
-                Vec3f::new(0.0, 0.0, 1.0),
+                Vec3f::unit_forward(),
             );
-            if let Some(color) = sphere.intersect_ray(ray) {
-                img.put_pixel(x, y, color);
+            if let Some(hit) = sphere.intersect_ray(ray) {
+                img.put_pixel(x, y, hit.albedo);
             } else {
                 img.put_pixel(x, y, bg_color);
             }

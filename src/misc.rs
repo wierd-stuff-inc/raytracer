@@ -1,5 +1,6 @@
 use crate::geometrical::*;
 use crate::vectors::*;
+use image::Rgba;
 
 #[derive(Debug, Copy, Clone)]
 pub struct Camera {
@@ -20,6 +21,23 @@ impl Ray {
     pub fn new(origin: Vec3f, direction: Vec3f) -> Ray {
         assert_ne!(origin, direction);
         Ray { origin, direction }
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct RaycastHit {
+    pub point: Vec3f,
+    pub normal: Vec3f,
+    pub albedo: Rgba<u8>,
+}
+
+impl RaycastHit {
+    pub fn new(point: Vec3f, normal: Vec3f, albedo: Rgba<u8>) -> RaycastHit {
+        RaycastHit {
+            point,
+            normal,
+            albedo,
+        }
     }
 }
 

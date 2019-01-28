@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Sub, Neg};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Vec3f {
@@ -14,6 +14,38 @@ impl Vec3f {
 
     pub fn from_one(x: f32) -> Vec3f {
         Vec3f::new(x, x, x)
+    }
+
+    pub fn zero() -> Vec3f {
+        Vec3f::new(0.0, 0.0, 0.0)
+    }
+
+    pub fn unit() -> Vec3f {
+        Vec3f::new(1.0, 1.0, 1.0)
+    }
+
+    pub fn unit_forward() -> Vec3f {
+        Vec3f::new(0.0, 0.0, 1.0)
+    }
+
+    pub fn unit_backward() -> Vec3f {
+        Vec3f::new(0.0, 0.0, -1.0)
+    }
+
+    pub fn unit_right() -> Vec3f {
+        Vec3f::new(1.0, 0.0, 0.0)
+    }
+
+    pub fn unit_left() -> Vec3f {
+        Vec3f::new(-1.0, 0.0, 0.0)
+    }
+
+    pub fn unit_up() -> Vec3f {
+        Vec3f::new(0.0, 1.0, 0.0)
+    }
+
+    pub fn unit_down() -> Vec3f {
+        Vec3f::new(0.0, -1.0, 0.0)
     }
 
     pub fn magnitude(&self) -> f32 {
@@ -78,5 +110,13 @@ impl Mul<Vec3f> for f32 {
 
     fn mul(self, other: Vec3f) -> Vec3f {
         other * self
+    }
+}
+
+impl Neg for Vec3f{
+    type Output = Vec3f;
+
+    fn neg(self) -> Vec3f{
+        Vec3f::new(-self.x, -self.y, -self.z)
     }
 }
