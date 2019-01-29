@@ -53,3 +53,68 @@ impl Geometrical for Sphere {
         }
     }
 }
+#[derive(Debug, PartialEq, Copy, Clone)]
+pub struct Triangle {
+    point_a: Vec3f,
+    point_b: Vec3f,
+    point_c: Vec3f,
+    albedo: Rgba<u8>,
+}
+
+impl Triangle {
+    pub fn new(point_a: Vec3f, point_b: Vec3f, point_c: Vec3f, albedo: Rgba<u8>) -> Triangle {
+        Triangle {
+            point_a,
+            point_b,
+            point_c,
+            albedo,
+        }
+    }
+}
+
+impl Geometrical for Triangle {
+    fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit> {
+        // Calculating triangle normal.
+        let triangle_plane_norm =
+            (self.point_b - self.point_a).cross(&(self.point_c - self.point_a));
+
+        let norm_dot_ray_dir = triangle_plane_norm.dot(&ray.direction);
+        //Check if ray and triangle are parallel; If true => No intersection;
+
+        if norm_dot_ray_dir.abs() < 1e-7 {
+            return None;
+        }
+        let d = triangle_plane_norm.dot(&self.point_a);
+        let t = (triangle_plane_norm.dot(&ray.direction) + d) / norm_dot_ray_dir;
+        // If t is less than zero => ray is behind triangle => No intersection;
+        if t < 0.0 {
+            return None;
+        }
+
+        let intersection_point = ray.origin + ray.direction * t;
+
+        // tests if intersection_point is on the left side of each one of the triangle's edges
+        let a = (self.point_b - self.point_a).cross(&(intersection_point - self.point_a));
+        if triangle_plane_norm.dot(&a) < 0.0 {
+            return None;
+        }
+
+        let b = (self.point_c - self.point_b).cross(&(intersection_point - self.point_b));
+        if triangle_plane_norm.dot(&b) < 0.0 {
+            return None;
+        }
+
+        let c = (self.point_a - self.point_c).cross(&(intersection_point - self.point_c));
+        if triangle_plane_norm.dot(&c) < 0.0 {
+            return None;
+        }
+
+        //todo: Fix normal. I think, something goes wrong.
+        let normal = (intersection_point - triangle_plane_norm).normalized();
+        Some(RaycastHit::new(
+            intersection_point,
+            normal,
+            self.albedo,
+        ))
+    }
+}

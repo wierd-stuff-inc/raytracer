@@ -1,4 +1,4 @@
-use std::ops::{Add, Mul, Sub, Neg};
+use std::ops::{Add, Mul, Div, Sub, Neg};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Vec3f {
@@ -71,12 +71,21 @@ impl Vec3f {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    pub fn cross(self, other: Vec3f) -> Vec3f {
+    pub fn cross(self, other: &Vec3f) -> Vec3f {
         Vec3f {
             x: self.y * other.z - self.z * other.y,
             y: self.z * other.x - self.x * other.z,
             z: self.x * other.y - self.y * other.x,
         }
+    }
+    // comp of other vector onto self (comp_{self}{other})
+    pub fn comp(self, other: &Vec3f) -> f32{
+        self.dot(other)/self.magnitude()
+    }
+
+    // projection of other vector onto self vector (proj_{self}{other})
+    pub fn project(self, other: &Vec3f) -> Vec3f{
+        (self.dot(other)/self.squared_magnitude()) * self
     }
 }
 
@@ -117,5 +126,13 @@ impl Neg for Vec3f{
 
     fn neg(self) -> Vec3f{
         Vec3f::new(-self.x, -self.y, -self.z)
+    }
+}
+
+impl Div for Vec3f{
+    type Output = Vec3f;
+
+    fn div(self, rhs: Vec3f) -> Vec3f{
+        Vec3f::new(self.x/rhs.x, self.y/rhs.y, self.z/rhs.z)
     }
 }

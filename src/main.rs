@@ -20,7 +20,6 @@ fn main() {
 }
 
 fn render(width: u32, height: u32) -> image::DynamicImage {
-
     let sphere = Sphere::new(
         Vec3f::new(256.0, 256.0, 256.0),
         100.0,
@@ -39,7 +38,16 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
         Vec3f::new(150.0, 50.0, 30.0),
         40.0,
         Rgba {
-            data: [100, 200, 50, 255],
+            data: [64, 206, 92, 255],
+        },
+    );
+
+    let triangle = Triangle::new(
+        Vec3f::new(256.0, 300.0, 100.0),
+        Vec3f::new(356.0, 156.0, 0.0),
+        Vec3f::new(456.0, 300.0, 0.0),
+        Rgba {
+            data: [64, 206, 92, 255],
         },
     );
     let bg_color = Rgba {
@@ -51,6 +59,7 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
     scene.add_object(&sphere);
     scene.add_object(&sphere2);
     scene.add_object(&sphere3);
+    scene.add_object(&triangle);
 
     scene.render()
 }
