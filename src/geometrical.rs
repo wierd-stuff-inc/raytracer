@@ -71,50 +71,39 @@ impl Triangle {
         }
     }
 }
-
+// Möller-Trumbore intersection algorithm implementation.
 impl Geometrical for Triangle {
     fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit> {
-        // Calculating triangle normal.
-        let triangle_plane_norm =
-            (self.point_b - self.point_a).cross(&(self.point_c - self.point_a));
+        let epsilon = 1e-7;
+        let edge1 = self.point_b - self.point_a;
+        let edge2 = self.point_c - self.point_a;
+        let h = ray.direction.cross(&edge2);
+        let det = edge1.dot(&h);
 
-        let norm_dot_ray_dir = triangle_plane_norm.dot(&ray.direction);
-        //Check if ray and triangle are parallel; If true => No intersection;
-
-        if norm_dot_ray_dir.abs() < 1e-7 {
-            return None;
-        }
-        let d = triangle_plane_norm.dot(&self.point_a);
-        let t = (triangle_plane_norm.dot(&ray.direction) + d) / norm_dot_ray_dir;
-        // If t is less than zero => ray is behind triangle => No intersection;
-        if t < 0.0 {
+        if det.abs() < epsilon {
             return None;
         }
 
-        let intersection_point = ray.origin + ray.direction * t;
+        let f = 1.0 / det;
 
-        // tests if intersection_point is on the left side of each one of the triangle's edges
-        let a = (self.point_b - self.point_a).cross(&(intersection_point - self.point_a));
-        if triangle_plane_norm.dot(&a) < 0.0 {
+        let s = ray.origin - self.point_a;
+        let u = f * s.dot(&h);
+
+        if u < 0.0 || u > 1.0 {
             return None;
         }
 
-        let b = (self.point_c - self.point_b).cross(&(intersection_point - self.point_b));
-        if triangle_plane_norm.dot(&b) < 0.0 {
+        let q = s.cross(&edge1);
+        let v = f * ray.direction.dot(&q);
+        if v < 0.0 || u + v > 1.0 {
             return None;
         }
 
-        let c = (self.point_a - self.point_c).cross(&(intersection_point - self.point_c));
-        if triangle_plane_norm.dot(&c) < 0.0 {
-            return None;
-        }
+        let t = f * edge2.dot(&q);
 
-        //todo: Fix normal. I think, something goes wrong.
-        let normal = (intersection_point - triangle_plane_norm).normalized();
-        Some(RaycastHit::new(
-            intersection_point,
-            normal,
-            self.albedo,
-        ))
+        let point = ray.origin + t * ray.direction;
+        let normal = (edge1.cross(&edge2) - self.point_a).normalized();
+        Some(RaycastHit::new(point, normal, self.albedo))
+
     }
 }

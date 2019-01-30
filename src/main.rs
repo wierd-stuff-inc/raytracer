@@ -43,15 +43,24 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
     );
 
     let triangle = Triangle::new(
-        Vec3f::new(256.0, 300.0, 100.0),
-        Vec3f::new(356.0, 156.0, 0.0),
-        Vec3f::new(456.0, 300.0, 0.0),
+        Vec3f::new(256.0, 500.0, 0.0),
+        Vec3f::new(356.0, 356.0, 400.0),
+        Vec3f::new(456.0, 500.0, 0.0),
         Rgba {
-            data: [64, 206, 92, 255],
+            data: [149, 226, 104, 255],
+        },
+    );
+
+    let triangle2 = Triangle::new(
+        Vec3f::new(256.0, 500.0, 0.0),
+        Vec3f::new(156.0, 356.0, 0.0),
+        Vec3f::new(356.0, 356.0, 0.0),
+        Rgba {
+            data: [149, 226, 104, 255],
         },
     );
     let bg_color = Rgba {
-        data: [255, 255, 255, 255],
+        data: [226, 182, 104, 255],
     };
 
     let camera = Camera::new(Vec3f::zero(), width, height, 0.0, 0.0);
@@ -60,6 +69,7 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
     scene.add_object(&sphere2);
     scene.add_object(&sphere3);
     scene.add_object(&triangle);
+    scene.add_object(&triangle2);
 
     scene.render()
 }
