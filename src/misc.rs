@@ -98,9 +98,12 @@ impl<'a> Scene<'a> {
         let (sender, receiver) = channel();
 
         (0..self.camera.fov_w).into_par_iter().for_each_with(sender, |s, x| {
+            let objects_rw = Arc::clone(&objects_arc);
+            let objs = objects_rw.read().unwrap();
+
+            let mut ys = vec![self.background_color; self.camera.fov_h as usize];
+
             for y in 0..self.camera.fov_h {
-                let objects_rw = Arc::clone(&objects_arc);
-                let objs = objects_rw.read().unwrap();
 
                 let ray = Ray::new(Vec3f::new(x as f32, y as f32, 0.0), Vec3f::unit_forward());
 
@@ -128,12 +131,15 @@ impl<'a> Scene<'a> {
                     }
                 }
 
-                s.send((x, y, final_color));
+                ys[y as usize] = final_color;
             }
+            s.send((x, ys));
         });
 
-        receiver.iter().for_each( |(x, y, color)| {
-            img.put_pixel(x, y, color);
+        receiver.iter().for_each( |(x, ys)| {
+            for (y, color) in ys.iter().enumerate() {
+                img.put_pixel(x, y as u32, *color);
+            }
         });
 
         img
