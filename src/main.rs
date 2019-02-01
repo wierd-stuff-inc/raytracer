@@ -1,4 +1,5 @@
 extern crate image;
+extern crate rayon;
 
 use image::Rgba;
 
@@ -65,11 +66,13 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
 
     let camera = Camera::new(Vec3f::zero(), width, height, 0.0, 0.0);
     let mut scene = Scene::new(camera, bg_color);
-    scene.add_object(&sphere);
-    scene.add_object(&sphere2);
-    scene.add_object(&sphere3);
-    scene.add_object(&triangle);
-    scene.add_object(&triangle2);
+    for _ in 0..50 {
+        scene.add_object(&sphere);
+        scene.add_object(&sphere2);
+        scene.add_object(&sphere3);
+        scene.add_object(&triangle);
+        scene.add_object(&triangle2);
+    }
 
     scene.render()
 }
