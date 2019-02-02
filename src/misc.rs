@@ -1,4 +1,4 @@
-use crate::geometrical::*;
+use crate::geometry::*;
 use crate::vectors::*;
 use image::{Rgba, GenericImage};
 use std::f32;

@@ -5,8 +5,8 @@ use image::Rgba;
 mod vectors;
 use vectors::*;
 
-mod geometrical;
-use geometrical::*;
+mod geometry;
+use geometry::*;
 
 mod misc;
 use misc::*;
