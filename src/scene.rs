@@ -2,21 +2,21 @@ use crate::geometry::*;
 use crate::vectors::*;
 use image::{Rgba, GenericImage};
 use std::f32;
-use crate::camera::Camera;
+use crate::cameras::Camera;
 use crate::rays::Ray;
 use std::sync::{Arc, RwLock};
 use std::sync::mpsc::channel;
 use rayon::prelude::*;
 
 #[derive(Debug)]
-pub struct Scene<'a> {
-    pub camera: Camera,
+pub struct Scene<'a, C: Camera> {
+    pub camera: C,
     pub objects: Vec<&'a (Geometrical + Send + Sync)>,
     pub background_color: Rgba<u8>,
 }
 
-impl<'a> Scene<'a> {
-    pub fn new(camera: Camera, background_color: Rgba<u8>) -> Scene<'a> {
+impl<'a, C: Camera> Scene<'a, C> {
+    pub fn new(camera: C, background_color: Rgba<u8>) -> Scene<'a, C> {
         let objects: Vec<&'a (Geometrical + Send + Sync)> = Vec::new();
         Scene {
             camera,
@@ -34,20 +34,20 @@ impl<'a> Scene<'a> {
     }
 
     pub fn render(&self) -> image::DynamicImage {
-        let mut img = image::DynamicImage::new_rgb8(self.camera.fov_w, self.camera.fov_h);
+        let mut img = image::DynamicImage::new_rgb8(self.camera.get_fov_w(), self.camera.get_fov_h());
 
         let objects_lock = RwLock::new(&self.objects);
         let objects_arc = Arc::new(objects_lock);
 
         let (sender, receiver) = channel();
 
-        (0..self.camera.fov_w).into_par_iter().for_each_with(sender, |s, x| {
+        (0..self.camera.get_fov_w()).into_par_iter().for_each_with(sender, |s, x| {
             let objects_rw = Arc::clone(&objects_arc);
             let objs = objects_rw.read().unwrap();
 
-            let mut ys = vec![self.background_color; self.camera.fov_h as usize];
+            let mut ys = vec![self.background_color; self.camera.get_fov_h() as usize];
 
-            for y in 0..self.camera.fov_h {
+            for y in 0..self.camera.get_fov_h(){
 
                 let ray = Ray::new(Vec3f::new(x as f32, y as f32, 0.0), Vec3f::unit_forward());
 
@@ -77,7 +77,7 @@ impl<'a> Scene<'a> {
 
                 ys[y as usize] = final_color;
             }
-            s.send((x, ys));
+            s.send((x, ys)).expect("Can't share data between threads.");
         });
 
         receiver.iter().for_each( |(x, ys)| {

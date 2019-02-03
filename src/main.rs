@@ -9,8 +9,8 @@ use vectors::*;
 mod geometry;
 use geometry::*;
 
-mod camera;
-use camera::Camera;
+mod cameras;
+use cameras::Orthographic;
 
 mod rays;
 
@@ -69,24 +69,13 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
         data: [226, 182, 104, 255],
     };
 
-    let camera = Camera::new(Vec3f::zero(), width, height, 0.0, 0.0);
+    let camera = Orthographic::new(Vec3f::zero(), width, height, 0.0, 0.0);
     let mut scene = Scene::new(camera, bg_color);
-<<<<<<< HEAD
     scene.add_object(&sphere);
     scene.add_object(&sphere2);
     scene.add_object(&sphere3);
     scene.add_object(&triangle);
     scene.add_object(&triangle2);
-=======
-    for _ in 0..50 {
-        scene.add_object(&sphere);
-        scene.add_object(&sphere2);
-        scene.add_object(&sphere3);
-        scene.add_object(&triangle);
-        scene.add_object(&triangle2);
-    }
-
->>>>>>> parallel
     scene.render()
 }
 
