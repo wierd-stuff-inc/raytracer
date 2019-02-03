@@ -6,11 +6,16 @@ use image::Rgba;
 mod vectors;
 use vectors::*;
 
-mod geometrical;
-use geometrical::*;
+mod geometry;
+use geometry::*;
 
-mod misc;
-use misc::*;
+mod camera;
+use camera::Camera;
+
+mod rays;
+
+mod scene;
+use scene::Scene;
 
 fn main() {
     let width = 512;
@@ -66,6 +71,13 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
 
     let camera = Camera::new(Vec3f::zero(), width, height, 0.0, 0.0);
     let mut scene = Scene::new(camera, bg_color);
+<<<<<<< HEAD
+    scene.add_object(&sphere);
+    scene.add_object(&sphere2);
+    scene.add_object(&sphere3);
+    scene.add_object(&triangle);
+    scene.add_object(&triangle2);
+=======
     for _ in 0..50 {
         scene.add_object(&sphere);
         scene.add_object(&sphere2);
@@ -74,6 +86,7 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
         scene.add_object(&triangle2);
     }
 
+>>>>>>> parallel
     scene.render()
 }
 
