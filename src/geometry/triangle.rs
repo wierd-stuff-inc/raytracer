@@ -1,8 +1,8 @@
-use crate::misc::RaycastHit;
+use crate::rays::RaycastHit;
 use crate::geometry::Geometrical;
 use image::Rgba;
 
-use crate::misc::Ray;
+use crate::rays::Ray;
 use crate::vectors::*;
 
 #[derive(Debug, PartialEq, Copy, Clone)]

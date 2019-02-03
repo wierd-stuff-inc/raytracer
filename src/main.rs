@@ -8,8 +8,13 @@ use vectors::*;
 mod geometry;
 use geometry::*;
 
-mod misc;
-use misc::*;
+mod camera;
+use camera::Camera;
+
+mod rays;
+
+mod scene;
+use scene::Scene;
 
 fn main() {
     let width = 512;
@@ -70,7 +75,6 @@ fn render(width: u32, height: u32) -> image::DynamicImage {
     scene.add_object(&sphere3);
     scene.add_object(&triangle);
     scene.add_object(&triangle2);
-
     scene.render()
 }
 
