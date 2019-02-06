@@ -1,10 +1,26 @@
-use std::ops::{Add, Mul, Div, Sub, Neg};
+#[cfg(test)]
+extern crate quickcheck;
+
+#[cfg(test)]
+use quickcheck::{Arbitrary, Gen};
+
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct Vec3f {
     x: f32,
     y: f32,
     z: f32,
+}
+
+#[cfg(test)]
+impl Arbitrary for Vec3f {
+    fn arbitrary<G: Gen>(g: &mut G) -> Vec3f {
+        let x = f32::arbitrary(g);
+        let y = f32::arbitrary(g);
+        let z = f32::arbitrary(g);
+        Vec3f{x, y, z}
+    }
 }
 
 impl Vec3f {
@@ -63,7 +79,6 @@ impl Vec3f {
     pub fn normalized(&self) -> Vec3f {
         let length = self.magnitude();
         let res = Vec3f::new(self.x / length, self.y / length, self.z / length);
-        // assert!((res.magnitude() - 1.0).abs() <= 1e-15);
         res
     }
 
@@ -78,14 +93,13 @@ impl Vec3f {
             z: self.x * other.y - self.y * other.x,
         }
     }
-    // comp of other vector onto self (comp_{self}{other})
-    pub fn comp(self, other: &Vec3f) -> f32{
-        self.dot(other)/self.magnitude()
+
+    pub fn comp(self, other: &Vec3f) -> f32 {
+        self.dot(other) / self.magnitude()
     }
 
-    // projection of other vector onto self vector (proj_{self}{other})
-    pub fn project(self, other: &Vec3f) -> Vec3f{
-        (self.dot(other)/self.squared_magnitude()) * self
+    pub fn project(self, other: &Vec3f) -> Vec3f {
+        (self.dot(other) / self.squared_magnitude()) * self
     }
 }
 
@@ -121,18 +135,18 @@ impl Mul<Vec3f> for f32 {
     }
 }
 
-impl Neg for Vec3f{
+impl Neg for Vec3f {
     type Output = Vec3f;
 
-    fn neg(self) -> Vec3f{
+    fn neg(self) -> Vec3f {
         Vec3f::new(-self.x, -self.y, -self.z)
     }
 }
 
-impl Div for Vec3f{
+impl Div for Vec3f {
     type Output = Vec3f;
 
-    fn div(self, rhs: Vec3f) -> Vec3f{
-        Vec3f::new(self.x/rhs.x, self.y/rhs.y, self.z/rhs.z)
+    fn div(self, rhs: Vec3f) -> Vec3f {
+        Vec3f::new(self.x / rhs.x, self.y / rhs.y, self.z / rhs.z)
     }
 }
