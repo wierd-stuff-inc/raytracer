@@ -1,1 +1,1 @@
-pub mod geometrical;
+pub mod primitives;

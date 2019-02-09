@@ -2,9 +2,9 @@ use crate::rays::RaycastHit;
 use image::Rgba;
 
 use crate::rays::Ray;
+use crate::robjects::rtraits::SceneObject;
 use crate::vectors::*;
-use crate::robjects::geometrical::Geometrical;
-use crate::robjects::Renderable;
+use crate::robjects::rtraits::Renderable;
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Sphere {
@@ -24,7 +24,7 @@ impl Sphere {
     }
 }
 
-impl Geometrical for Sphere {
+impl Renderable for Sphere {
     fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit> {
         // Vector to sphere center from ray origin.
         let l = self.position - ray.origin;
@@ -48,4 +48,8 @@ impl Geometrical for Sphere {
             None
         }
     }
+}
+
+impl SceneObject for Sphere{
+
 }

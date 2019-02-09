@@ -1,5 +1,7 @@
-mod rtraits;
 mod geometrical;
+mod scene;
+pub mod cameras;
+pub mod rtraits;
 
 pub use geometrical::*;
-pub use rtraits::*;
+// pub use scene::Scene;

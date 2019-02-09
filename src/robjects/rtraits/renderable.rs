@@ -1,7 +1,6 @@
-extern crate image;
 use crate::rays::Ray;
 use crate::rays::RaycastHit;
 
-pub trait Geometrical: std::fmt::Debug {
+pub trait Renderable: std::fmt::Debug + Sync + Send {
     fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit>;
 }

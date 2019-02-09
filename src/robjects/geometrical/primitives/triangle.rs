@@ -1,5 +1,6 @@
 use crate::rays::RaycastHit;
-use crate::robjects::geometrical::Geometrical;
+use crate::robjects::rtraits::Renderable;
+use crate::robjects::rtraits::SceneObject;
 use image::Rgba;
 
 use crate::rays::Ray;
@@ -23,8 +24,13 @@ impl Triangle {
         }
     }
 }
+
+impl SceneObject for Triangle {
+
+}
+
 // Möller-Trumbore intersection algorithm implementation.
-impl Geometrical for Triangle {
+impl Renderable for Triangle {
     fn intersect_ray(&self, ray: Ray) -> Option<RaycastHit> {
         let epsilon = 1e-7;
         let edge1 = self.point_b - self.point_a;
